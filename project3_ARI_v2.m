@@ -17,9 +17,9 @@ cdir = fileparts(cd());
 % Path to the file
 % Works if BOTH the script and data are in the 'Scripts' folder!
 % Instructions: Run setup. Run the script (press 'add to path').
-file_path = fullfile(cd(), 'Scripts/Project3_ML-DM/abalone.csv');
+file_path = fullfile(cd(), 'Scripts/02450_ML_DM_Project3/abalone.csv');
 
-%file_path = fullfile(cd(), 'Scripts\Project3_ML-DM\abalone.csv');
+%file_path = fullfile(cd(), 'Scripts\02450_ML_DM_Project3\abalone.csv');
 %"No! We are here"
 %
 % Load the data
