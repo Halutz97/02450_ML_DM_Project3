@@ -16,10 +16,12 @@ My_mfilename = mfilename('fullpath');
 cdir = fileparts(cd());
 % Path to the file
 % Works if BOTH the script and data are in the 'Scripts' folder!
+% Instructions: Run setup. Run the script (press 'add to path').
+file_path = fullfile(cd(), 'Scripts/Project3_ML-DM/abalone.csv');
 
-    file_path = fullfile(cd(), 'Scripts\Project3_ML-DM\abalone.csv');
-    "No! We are here"
-
+%file_path = fullfile(cd(), 'Scripts\Project3_ML-DM\abalone.csv');
+%"No! We are here"
+%
 % Load the data
 abalone_table = readtable(file_path);
 AttributeNames = {'Sex' 'Length' 'Diameter' 'Height' 'Whole weight' 'Shucked weight' 'Viscera weight' 'Shell weight' 'Rings'};
