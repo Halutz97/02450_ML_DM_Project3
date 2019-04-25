@@ -15,10 +15,8 @@
 My_mfilename = mfilename('fullpath');
 cdir = fileparts(cd());
 % Path to the file
-
-% Works if BOTH the script and data are in the GitKraken folder!
+% Works if BOTH the script and data are in the G folder!
 % Instructions: Run setup. Run the script (press 'add to path').
-
 %file_path = fullfile(cd(), 'Scripts/abalone.csv');
 file_path = fullfile(cd(), 'Scripts/02450_ML_DM_Project3/abalone.csv');
 
@@ -75,8 +73,6 @@ y = SubLabel(:,1).*1 + SubLabel(:,2).*2 + SubLabel(:,3).*3;
 % Plot data
 mfig('K-means 2'); clf; 
 clusterplot(SubData, y, i, Xc);
-% Notice: The dots indicate the different labels, and the circles indicate
-% the clusters - it's easy to get confused!
 
 % Looks better!
 % We see that the different clusters are indeed Male, Female and Infant..
