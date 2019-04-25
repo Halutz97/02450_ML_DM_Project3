@@ -48,12 +48,12 @@ Rand = nan(K,1);
 Jaccard = nan(K,1);
 NMI = nan(K,1);
 
-    array = zeros(N,K)
-for k = 1:K  
+for k = 1:K    
     % Run k-means
-    [i, Xc, SUMD, D] = kmeans(X, k, 'Display', 'iter', 'OnlinePhase', 'off');
-    array = min(A,[], ___ ,'linear')
+    [i, Xc] = kmeans(X, k, 'Display', 'iter', 'OnlinePhase', 'off');
+    
     % Compute cluster validities
+    [i, Xc] = kmeans(X, K, 'Display', 'iter', 'OnlinePhase', 'off');
 
 end
 %% Plot results
