@@ -42,9 +42,20 @@ N = size(X,1);
 %% Known class labels:
 SubLabel = JoinedData(:,1:3);
 y = SubLabel(:,1).*1 + SubLabel(:,2).*2 + SubLabel(:,3).*3; 
+
 %% Clustering using Gaussian Mixture Model (GMM)
-
-
+% Number of clusters
+K = 2;
+% Fit model
+G = gmdistribution.fit(X, K,'regularize',10e-9);
+% Compute clustering
+i = cluster(G, X);
+%% Extract cluster centers
+X_c = G.mu;
+Sigma_c=G.Sigma;
+%% Plot results
+mfig('GMM: Clustering K = 2'); clf; 
+clusterplot(X, y, i, X_c, Sigma_c);
 
 %% Hierarchical Clustering:
 % How do we make it actually cluster the data?
