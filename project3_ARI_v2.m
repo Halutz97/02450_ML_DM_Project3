@@ -27,7 +27,7 @@ abalone_table = readtable(file_path);
 AttributeNames = {'Sex' 'Length' 'Diameter' 'Height' 'Whole weight' 'Shucked weight' 'Viscera weight' 'Shell weight' 'Rings'};
 
 % 1 out of K coded:
-Col1   =  OneOutOfKCoding(stringArray2num(string(table2array(abalone_table(:, 1)))))
+Col1   =  OneOutOfKCoding(stringArray2num(string(table2array(abalone_table(:, 1)))));
 % Numerical values:
 Col2_9 = table2array(abalone_table(:, 2:9)); 
 % Join arrays back together:
@@ -35,27 +35,62 @@ JoinedData = horzcat(Col1,Col2_9);
 % Normalize the data
 NormData1 = (JoinedData-mean(JoinedData))./std(JoinedData);
 NormData2 = horzcat((Col1-mean(Col1))./sqrt(size(Col1,2)),(Col2_9-mean(Col2_9)./std(Col2_9)));
+NormData3 = (Col2_9-mean(Col2_9))./std(Col2_9);
 %%
-X = NormData1
+X = NormData3;
+N = size(X,1);
+%% Known class labels:
+SubLabel = JoinedData(:,1:3);
+y = SubLabel(:,1).*1 + SubLabel(:,2).*2 + SubLabel(:,3).*3; 
 %% Clustering using Gaussian Mixture Model (GMM)
 
+
+
+%% Hierarchical Clustering:
+% How do we make it actually cluster the data?
+% Should we use something other than eucledian distance?
+% Should we use the raw data, X, in linkage or the distance between the
+% data in pdist as the input to linkage?
+
+Maxclust = 6
+XHC = pdist(X,'euclidean');
+Z = linkage(XHC,'average');
+i = cluster(Z,'Maxclust',Maxclust)
+%% Plot result
+% Plot dendrogram
+mfig('Dendrogram'); clf;
+dendrogram(Z);
+
+%% Plot data
+mfig('Hierarchical'); clf; 
+clusterplot(X, y, i);
+
+%%
 %% K-means clustering - Taken from ex10_1_3.m
 % Maximum number of clusters
 K = 10;
-
 % Allocate variables
 Rand = nan(K,1);
 Jaccard = nan(K,1);
 NMI = nan(K,1);
-
-    array = zeros(N,K)
-for k = 1:K  
+% minArrayIndex = zeros(N,K);
+% minArrayVal = zeros(N,K);
+for k = 1:K
     % Run k-means
-    [i, Xc, SUMD, D] = kmeans(X, k, 'Display', 'iter', 'OnlinePhase', 'off');
-    array = min(A,[], ___ ,'linear')
+    [i, Xc, SUMD, D] = kmeans(X, k,'distance','correlation');%, 'Display', 'iter', 'OnlinePhase', 'off'
+%     [minArrayVal(:,k), minArrayIndex(:,k)] = min(D,[],2); % Get the index with the smallest index
     % Compute cluster validities
-
+    [Rand(k), Jaccard(k), NMI(k)] = ...
+        clusterval(y, i);
+    figname = string("My K-means "+k)
+    mfig(figname); clf; 
+    clusterplot(X, y, i, Xc);%, Xc
 end
+%%
+
+
+    
+    
 %% Plot results
 
 mfig('Cluster validity'); clf; hold all;
