@@ -63,19 +63,22 @@ clusterplot(X, y, i, X_c, Sigma_c);
 % Should we use the raw data, X, in linkage or the distance between the
 % data in pdist as the input to linkage?
 
-Maxclust = 6
+Maxclust = 10
 XHC = pdist(X,'euclidean');
 Z = linkage(XHC,'average');
-i = cluster(Z,'Maxclust',Maxclust)
+i = cluster(Z,'Maxclust',Maxclust);
 %% Plot result
 % Plot dendrogram
 mfig('Dendrogram'); clf;
 dendrogram(Z);
 
-%% Plot data
+%% Plot data (only the guessed categories)
 mfig('Hierarchical'); clf; 
-clusterplot(X, y, i);
-
+clusterplot(X, 0, i+6);
+%% data with known categories:
+mfig('Hierarchical'); clf; 
+clusterplot(X, y+1, 0);
+%% plot data (both data and guesses)
 %%
 %% K-means clustering - Taken from ex10_1_3.m
 % Maximum number of clusters

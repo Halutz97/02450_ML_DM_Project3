@@ -9,7 +9,7 @@
 %##   script to work.                   ##%
 %#########################################%
 
-% clc; clear; close all;
+clc; clear; close all;
 %% Data Preparation:
 %Path to the dataset
 My_mfilename = mfilename('fullpath');
@@ -63,10 +63,10 @@ clusterplot(X, y, i, X_c, Sigma_c);
 % Should we use the raw data, X, in linkage or the distance between the
 % data in pdist as the input to linkage?
 
-Maxclust = 6
+Maxclust = 10
 XHC = pdist(X,'euclidean');
 Z = linkage(XHC,'average');
-i = cluster(Z,'Maxclust',Maxclust)
+i = cluster(Z,'Maxclust',Maxclust);
 %% Plot result
 % Plot dendrogram
 mfig('Dendrogram'); clf;
@@ -74,8 +74,10 @@ dendrogram(Z);
 
 %% Plot data
 mfig('Hierarchical'); clf; 
-clusterplot(X, y, i);
-
+clusterplot(X, 0, i+6);
+%% data with known categories:
+mfig('Hierarchical'); clf; 
+clusterplot(X, y+1, 0);
 %%
 %% K-means clustering - Taken from ex10_1_3.m
 % Maximum number of clusters
@@ -144,6 +146,7 @@ index_vector(1,:) = i(1:20);
 % Plot outlier scores
 mfig('Gaussian Kernel Density: outlier score'); clf;
 bar(y(1:20));
+xticklabels(index_vector(1,:))
 %%
 %mfig('Gaussian Kernel Density: outlier score (index_vector)'); clf;
 %bar(y(1:20));
@@ -181,7 +184,7 @@ index_vector(2,:) = i(1:20);
 % Plot outlier scores
 mfig('KNN density: outlier score'); clf;
 bar(y(1:20));
-xticklabels(
+xticklabels(index_vector(2,:))
 % % Plot possible outliers
 % mfig('KNN density: Possible outliers'); clf;
 % for k = 1:20
@@ -203,7 +206,7 @@ index_vector(3,:) = i(1:20);
 % Plot outlier scores
 mfig('KNN average relative density: outlier score'); clf;
 bar(y(1:20));
-
+xticklabels(index_vector(3,:))
 % % Plot possible outliers
 % mfig('KNN average relative density: Possible outliers'); clf;
 % for k = 1:20
