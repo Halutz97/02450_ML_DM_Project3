@@ -27,7 +27,7 @@ abalone_table = readtable(file_path);
 AttributeNames = {'Sex' 'Length' 'Diameter' 'Height' 'Whole weight' 'Shucked weight' 'Viscera weight' 'Shell weight' 'Rings'};
 
 % 1 out of K coded:
-Col1   =  OneOutOfKCoding(stringArray2num(string(table2array(abalone_table(:, 1)))))
+Col1   =  OneOutOfKCoding(stringArray2num(string(table2array(abalone_table(:, 1)))));
 % Numerical values:
 Col2_9 = table2array(abalone_table(:, 2:9)); 
 % Join arrays back together:
@@ -40,7 +40,6 @@ NormData2 = horzcat((Col1-mean(Col1))./sqrt(size(Col1,2)),(Col2_9-mean(Col2_9)./
 
 % Subset of data
 SubData = NormData1(1:200,1:11);
-
 % Number of clusters
 K = 4;
 
@@ -54,7 +53,7 @@ y = 1;  % Don't know what y does.. I just assigned y some random value
 % Plot data
 mfig('K-means 1'); clf; 
 clusterplot(SubData, y, i, Xc);
-
+%%
 % Okay. We can see from the plot, that it seems to be more resonable to
 % have 3 clusters..
 % And the squared euclidean distance measure is not optimal in this case!
@@ -68,7 +67,7 @@ K = 3;
 SubLabel = JoinedData(1:200,1:3);
 y = zeros(200,1);
 y = SubLabel(:,1).*1 + SubLabel(:,2).*2 + SubLabel(:,3).*3; 
-
+%%
 [i, Xc] = kmeans(SubData, K,'distance','correlation');
 % Distance is set to 'correlation'.
 
@@ -81,7 +80,7 @@ clusterplot(SubData, y, i, Xc);
 % Looks better!
 % We see that the different clusters are indeed Male, Female and Infant..
 
-%Let's try some clustervalidation (We know the result should be 3):
+%% Let's try some clustervalidation (We know the result should be 3):
 
 K = 6; %Max clusters.
 
@@ -90,7 +89,7 @@ Rand = nan(K,1);
 Jaccard = nan(K,1);
 NMI = nan(K,1);
 
-for k = 1:K    
+for k = 3 %1:K    
     % Run k-means
     [i, Xc] = kmeans(SubData, k);
     
