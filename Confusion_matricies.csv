@@ -1,0 +1,11 @@
+﻿Gaussian Mixture Model;;;;;;Hierarchical clustering;;;;
+;Female;434;611;262;;;Female;319;811;177
+True class;Male;447;731;350;;True class;Male;378;913;237
+;Infant;121;383;838;;;Infant;521;304;517
+;;Female;Male;Infant;;;;Female;Male;Infant
+;;;Predicted Class;;;;;;Predicted Class;
+;;;;;;;;;;
+;;;;;;;;;;
+;;;;;;;;;;
+;;correct classification;misclassification rate:;;;;;correct classification;misclassification rate:;
+;;0,479530764;0,520469236;;;;;0,418721571;0,581278429;

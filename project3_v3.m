@@ -76,7 +76,7 @@ CVE = zeros(T,1);
 CV = cvpartition(N, 'Kfold', 10);
 
 % For each model order
-for t = 1:T    
+for t = 11  
     % Get the current K
     K = KRange(t);
     
@@ -135,8 +135,8 @@ end
 Axislabels = {'Females','Males','Infants'}
 % countries = {'Botswana','Lesotho','Iceland'};
 figure
-confusionchart(y,iAverage(:,3))
-legend('a','b','c')
+confusionchart(y,iAverage(:,11))
+% legend('a','b','c')
 %%
 
 Maxclust = 11
@@ -172,7 +172,7 @@ end
 % Should we use the raw data, X, in linkage or the distance between the
 % data in pdist as the input to linkage?
 
-Maxclust = 4
+Maxclust = 11
 % XHC = pdist(X,'euclidean');
 % Z = linkage(XHC,'average');
 % i = cluster(Z,'Maxclust',Maxclust)
