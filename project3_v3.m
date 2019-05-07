@@ -17,7 +17,7 @@ cdir = fileparts(cd());
 % Path to the file
 % Works if BOTH the script and data are in the 'Scripts' folder!
 % Instructions: Run setup. Run the script (press 'add to path').
-file_path = fullfile(cd(), 'Scripts/02450_ML_DM_Project3/abalone.csv');
+file_path = fullfile(cd(), 'Scripts/HomeComputer/02450_ML_DM_Project3/abalone.csv');
 
 %file_path = fullfile(cd(), 'Scripts\02450_ML_DM_Project3\abalone.csv');
 %"No! We are here"
@@ -45,22 +45,23 @@ y = SubLabel(:,1).*1 + SubLabel(:,2).*2 + SubLabel(:,3).*3;
 
 %% Clustering using Gaussian Mixture Model (GMM)
 % Number of clusters
-K = 2;
+K = 3;
 % Fit model
 G = gmdistribution.fit(X, K,'regularize',10e-9);
 % Compute clustering
 i = cluster(G, X);
-%% Extract cluster centers
+% %% Extract cluster centers
 X_c = G.mu;
 Sigma_c=G.Sigma;
-%% Plot results
-mfig('GMM: Clustering K = 2'); clf; 
+% %% Plot results
+mfig('GMM: Clustering K = 3'); clf; 
 clusterplot(X, y, i, X_c, Sigma_c);
 
 
 %% Cross-Validation for estimating the number of components in the GMM
 
-n_clusters = 10; % Increase to estimate number of components needed.
+n_clusters = 15; % Increase to estimate number of components needed.
+iAverage = nan(size(y,1),n_clusters)
 
 % Range of K's to try
 KRange = 1:n_clusters;
@@ -75,7 +76,7 @@ CVE = zeros(T,1);
 CV = cvpartition(N, 'Kfold', 10);
 
 % For each model order
-for t = 1:T    
+for t = 11  
     % Get the current K
     K = KRange(t);
     
@@ -102,10 +103,20 @@ for t = 1:T
         [~, NLOGL] = posterior(G, X_test);
         CVE(t) = CVE(t)+NLOGL;
     end
+    % Compute clustering
+    i = cluster(G, X);
+    % %% Extract cluster centers
+    iAverage(:,t) = i;
+    X_c = G.mu;
+    Sigma_c=G.Sigma;
+    % %% Plot results
+    figname = "GMM: Clustering K = " + t;
+    mfig('1234'); clf; 
+    clusterplot(X, y, i, X_c, Sigma_c);
 end
 
 
-%% Plot results
+% Plot results
 
 mfig('GMM: Number of clusters'); clf; hold all
 plot(KRange, BIC);
@@ -113,30 +124,91 @@ plot(KRange, AIC);
 plot(KRange, 2*CVE);
 legend('BIC', 'AIC', 'Crossvalidation');
 xlabel('K');
+%%
+iAverage
+figure
+for j = 1:T
+    subplot(4,4,j)
+    confusionchart(y,iAverage(:,j))
+end
+%%
+Axislabels = {'Females','Males','Infants'}
+% countries = {'Botswana','Lesotho','Iceland'};
+figure
+confusionchart(y,iAverage(:,11))
+% legend('a','b','c')
+%%
 
+Maxclust = 11
+    
+% Allocate variables
+% BIC = nan(T,1);
+% AIC = nan(T,1);
+CVE = zeros(T,1);
 
+KRange = 1:Maxclust;
+T = length(KRange);
+for t = 1:T
+    % Display information
+    fprintf('Fitting model for K=%d\n', K);
+
+    for k = 1:CV.NumTestSets
+        % Extract the training and test set
+        X_train = X(CV.training(k), :);
+        X_test = X(CV.test(k), :);
+        
+        % Fit model to training set
+%         G = gmdistribution.fit(X_train, K, 'Replicates', 10);
+        Z = linkage(X_train,'complete')
+        i = cluster(Z,'Maxclust',Maxclust)
+        % Evaluation crossvalidation error
+        [~, NLOGL] = posterior(G, X_test);
+        CVE(t) = CVE(t)+NLOGL;
+    end
+end
 %% Hierarchical Clustering:
 % How do we make it actually cluster the data?
 % Should we use something other than eucledian distance?
 % Should we use the raw data, X, in linkage or the distance between the
 % data in pdist as the input to linkage?
 
-Maxclust = 10
-XHC = pdist(X,'euclidean');
-Z = linkage(XHC,'average');
-i = cluster(Z,'Maxclust',Maxclust);
-%% Plot result
-% Plot dendrogram
-mfig('Dendrogram'); clf;
-dendrogram(Z);
+Maxclust = 11
+% XHC = pdist(X,'euclidean');
+% Z = linkage(XHC,'average');
+% i = cluster(Z,'Maxclust',Maxclust)
+% %% Plot result
+% % Plot dendrogram
+% mfig('Dendrogram'); clf;
+% dendrogram(Z);
+% 
+% %% Plot data
+% mfig('Hierarchical'); clf; 
+% clusterplot(X, y, i);
+% %%
+Z2 = linkage(X,'complete')
+i2 = cluster(Z2,'Maxclust',Maxclust)
+mfig('Dendrogram 2'); clf;
+dendrogram(Z2,0);
+mfig('Dendrogram 3'); clf;
+dendrogram(Z2);
+% legend('Category 1','Category 2','Category 3','','Female','Male','Infant')
+mfig('Hierarchical 2'); clf; 
+clusterplot(X, y, i2);
+legend('Category 1','Category 2','Category 3','Category 4','Female','Male','Infant')
+figure
+C = confusionmat(y,i2)
+confusionchart(y,i2)
+%%
+figure
+for i = 1:3
+    subplot(3,1,i)
+    confusionchart(y,mod(i2+i,3)+1)
+end
 
-%% Plot data (only the guessed categories)
+%% Plot data
 mfig('Hierarchical'); clf; 
-clusterplot(X, 0, i+6);
-%% data with known categories:
-mfig('Hierarchical'); clf; 
-clusterplot(X, y+1, 0);
-%% plot data (both data and guesses)
+clusterplot(X, y, i);
+
 %%
 %% K-means clustering - Taken from ex10_1_3.m
 % Maximum number of clusters
